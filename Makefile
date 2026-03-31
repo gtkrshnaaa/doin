@@ -5,7 +5,9 @@ OBJ_DIR = build
 BIN_DIR = bin
 TARGET = $(BIN_DIR)/doin
 SCRIPTS_DIR = scripts
-INSTALL_DIR = /data/data/com.termux/files/usr/bin
+# Path configuration
+PREFIX ?= /usr/local
+INSTALL_DIR = $(PREFIX)/bin
 DOIN_SCRIPTS_PATH = $(HOME)/.doin/availsh
 VERSION = v0.1.1
 
