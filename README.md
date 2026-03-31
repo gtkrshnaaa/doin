@@ -9,10 +9,12 @@ DOIN is a minimalist, high-performance command-line utility written in C, specif
 4. [Prerequisites](#prerequisites)
 5. [Installation](#installation)
 6. [Usage](#usage)
-7. [Adding Custom Commands](#adding-custom-commands)
-8. [Development](#development)
-9. [Project Structure](#project-structure)
-10. [License](#license)
+7. [Bash Completion](#bash-completion)
+8. [Default Monitoring Commands](#default-monitoring-commands)
+9. [Adding Custom Commands](#adding-custom-commands)
+10. [Development](#development)
+11. [Project Structure](#project-structure)
+12. [License](#license)
 
 ---
 
@@ -28,6 +30,8 @@ Automating repetitive tasks in a mobile terminal environment like Termux often r
 
 ## Key Features
 - **Global Accessibility:** Once installed, `doin` is accessible from any path in your terminal.
+- **Tab Completion:** Supports native bash completion for all your custom commands.
+- **Vertical Layout Philosophy:** All default scripts are optimized for narrow terminal screens (Termux) using a clean vertical "Label : Value" format.
 - **Arguments Passing:** Supports passing an unlimited number of arguments from the `doin` command directly to the underlying script.
 - **Elegant Output:** Features a color-coded Makefile for a clean and professional installation experience.
 - **Minimalist Footprint:** Extremely small binary size with zero external dependencies beyond the standard C library.
@@ -53,28 +57,41 @@ pkg install clang make git -y
    ```bash
    make install
    ```
-   *Note: This will install the binary to `/data/data/com.termux/files/usr/bin/` and initialize the scripts directory at `~/.doin/availsh/`.*
+   *Note: This will install the binary to your `$PREFIX/bin`, set up scripts at `~/.doin/availsh/`, and configure bash completion.*
 
 ## Usage
-### Check Version
-```bash
-doin -v
-# or
-doin --version
-```
+### Options
+- `doin -v`, `doin --version` : Show version information.
+- `doin -h`, `doin --help`    : Show help message.
+- `doin -l`, `doin --list`    : List all available custom commands.
 
 ### Run a Command
 ```bash
 doin <command_name> [optional_arguments]
 ```
 
-### Example (Pre-installed)
+## Bash Completion
+`doin` supports automatic command completion. To activate it in your current session after installation, run:
 ```bash
-doin ramcheck
+source $PREFIX/etc/bash_completion.d/doin
 ```
+*Note: This is usually handled automatically by the shell on new sessions if `bash-completion` is installed.*
+
+## Default Monitoring Commands
+The following commands are pre-installed and optimized for vertical display:
+- `ramcheck`   : Memory usage statistics.
+- `cpuusage`   : CPU load average monitoring.
+- `diskusage`  : Storage space statistics.
+- `battery`    : Battery status (requires `termux-api`).
+- `sysinfo`    : Kernel and system information.
+- `netstat`    : Network connection and IP info.
+- `topmem`     : Top memory-consuming processes.
+- `procsearch` : Search for running processes.
+- `weather`    : Local weather report.
+- `uptime`     : Detailed system uptime.
 
 ## Adding Custom Commands
-To add your own automation to `doin`, simply follow these steps:
+To add your own automation to `doin`, simply follow ini steps:
 1. Create a new shell script in `~/.doin/availsh/`:
    ```bash
    nano ~/.doin/availsh/mytool.sh
@@ -89,7 +106,7 @@ To add your own automation to `doin`, simply follow these steps:
    ```bash
    chmod +x ~/.doin/availsh/mytool.sh
    ```
-4. Run it instantly:
+4. Run it instantly with auto-completion:
    ```bash
    doin mytool
    ```
@@ -98,7 +115,7 @@ To add your own automation to `doin`, simply follow these steps:
 The project uses a structured build system:
 - `make build`: Prepares the environment and directories.
 - `make clean`: Removes all compiled binaries and build artifacts.
-- `make uninstall`: Removes the `doin` binary and all scripts from the system.
+- `make uninstall`: Removes the `doin` binary, scripts, and completion config.
 
 ## Project Structure
 ```text
@@ -106,9 +123,9 @@ doin/
 ├── bin/                # Compiled binaries (ignored by git)
 ├── build/              # Object files (ignored by git)
 ├── scripts/            # Default sample scripts
-│   └── ramcheck.sh     # System memory utility
 ├── doin.c              # Core C source code
-├── Makefile            # Advanced build system
+├── doin-completion.sh  # Bash completion logic
+├── Makefile            # Portable build system (using PREFIX)
 ├── .gitignore          # Version control exclusions
 └── README.md           # Documentation
 ```

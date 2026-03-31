@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
-#define VERSION "v0.1.1"
+#define VERSION "v0.1.2"
 
 /**
  * doin: A simple command-line utility to run custom scripts.
