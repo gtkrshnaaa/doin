@@ -9,6 +9,7 @@ SCRIPTS_DIR = scripts
 PREFIX ?= /usr/local
 INSTALL_DIR = $(PREFIX)/bin
 DOIN_SCRIPTS_PATH = $(HOME)/.doin/availsh
+COMP_DIR = $(PREFIX)/etc/bash_completion.d
 VERSION = v0.1.1
 
 # Colors for elegant output
@@ -46,14 +47,20 @@ install: all
 	@chmod +x $(DOIN_SCRIPTS_PATH)/*.sh
 	@echo "$(GREEN)[ OK ]$(RESET) Scripts deployed and permissions set"
 	
+	@echo "$(BLUE)[ COMP ]$(RESET) Setting up bash completion..."
+	@mkdir -p $(COMP_DIR)
+	@cp doin-completion.sh $(COMP_DIR)/doin
+	@echo "$(GREEN)[ OK ]$(RESET) Completion script installed"
+	
 	@echo "--------------------------------------------------"
 	@echo "$(GREEN)Installation of doin $(VERSION) completed successfully.$(RESET)"
 	@echo "You can now use '$(CYAN)doin <command>$(RESET)' to run your scripts."
 
 uninstall:
-	@echo "$(RED)[ UNINSTALL ]$(RESET) Removing binary and scripts..."
+	@echo "$(RED)[ UNINSTALL ]$(RESET) Removing binary, scripts, and completion..."
 	@rm -f $(INSTALL_DIR)/doin
 	@rm -rf $(DOIN_SCRIPTS_PATH)
+	@rm -f $(COMP_DIR)/doin
 	@echo "$(GREEN)[ OK ]$(RESET) Uninstallation complete."
 
 clean:
