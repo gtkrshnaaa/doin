@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <limits.h>
 
 #define VERSION "v0.1.4"
 
@@ -49,8 +50,11 @@ int main(int argc, char *argv[]) {
 
     // Handle list flags
     if (strcmp(argv[1], "-l") == 0 || strcmp(argv[1], "--list") == 0) {
-        char dir_path[1024];
-        snprintf(dir_path, sizeof(dir_path), "%s/.doin/availsh", home);
+        char dir_path[PATH_MAX];
+        if (snprintf(dir_path, sizeof(dir_path), "%s/.doin/availsh", home) >= (int)sizeof(dir_path)) {
+            fprintf(stderr, "Error: Directory path too long.\n");
+            return 1;
+        }
 
         DIR *d = opendir(dir_path);
         if (d == NULL) {
@@ -65,19 +69,25 @@ int main(int argc, char *argv[]) {
             size_t len = strlen(dir->d_name);
             if (len > 3 && strcmp(dir->d_name + len - 3, ".sh") == 0) {
                 // Print filename without .sh extension
-                char cmd_name[256];
-                strncpy(cmd_name, dir->d_name, len - 3);
-                cmd_name[len - 3] = '\0';
-                printf("  - %s\n", cmd_name);
+                printf("  - %.*s\n", (int)(len - 3), dir->d_name);
             }
         }
         closedir(d);
         return 0;
     }
 
+    // Security check: ensure the command does not contain path separators
+    if (strchr(argv[1], '/') != NULL) {
+        fprintf(stderr, "Error: Invalid command name. Command name cannot contain '/'.\n");
+        return 1;
+    }
+
     // Construct the path to the script: ~/.doin/availsh/<command>.sh
-    char script_path[1024];
-    snprintf(script_path, sizeof(script_path), "%s/.doin/availsh/%s.sh", home, argv[1]);
+    char script_path[PATH_MAX];
+    if (snprintf(script_path, sizeof(script_path), "%s/.doin/availsh/%s.sh", home, argv[1]) >= (int)sizeof(script_path)) {
+        fprintf(stderr, "Error: Script path too long.\n");
+        return 1;
+    }
 
     // Check if the script file exists
     struct stat st;
