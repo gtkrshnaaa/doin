@@ -103,7 +103,8 @@ int main(int argc, char *argv[]) {
     }
 
     // Prepare arguments for execv: the script path followed by any additional arguments
-    char **new_argv = malloc((argc + 1) * sizeof(char *));
+    // Size: 1 (script_path) + (argc - 2) (original args from argv[2]) + 1 (NULL terminator) = argc
+    char **new_argv = malloc(argc * sizeof(char *));
     if (new_argv == NULL) {
         perror("malloc");
         return 1;
@@ -116,13 +117,10 @@ int main(int argc, char *argv[]) {
     new_argv[argc - 1] = NULL;
 
     // Execute the script, replacing the current process
-    if (execv(script_path, new_argv) == -1) {
-        perror("execv");
-        free(new_argv);
-        return 1;
-    }
+    execv(script_path, new_argv);
 
-    // Should never reach here if execv is successful
+    // If execv returns, it means an error occurred
+    perror("execv");
     free(new_argv);
-    return 0;
+    return 1;
 }
