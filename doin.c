@@ -6,7 +6,7 @@
 #include <dirent.h>
 #include <limits.h>
 
-#define VERSION "v0.1.4"
+#define VERSION "v0.1.5"
 
 /**
  * doin: A simple command-line utility to run custom scripts.

@@ -10,7 +10,7 @@ PREFIX ?= /usr/local
 INSTALL_DIR = $(PREFIX)/bin
 DOIN_SCRIPTS_PATH = $(HOME)/.doin/availsh
 COMP_DIR = $(PREFIX)/etc/bash_completion.d
-VERSION = v0.1.4
+VERSION = v0.1.5
 
 # Colors for elegant output
 BLUE = \033[1;34m
