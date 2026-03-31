@@ -23,6 +23,16 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
+    // Handle help flags
+    if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
+        printf("Usage: doin <command> [args...]\n\n");
+        printf("Options:\n");
+        printf("  -v, --version    Show version information\n");
+        printf("  -h, --help       Show this help message\n\n");
+        printf("Commands are scripts located in ~/.doin/availsh/<command>.sh\n");
+        return 0;
+    }
+
     // Get the HOME directory for script lookup
     const char *home = getenv("HOME");
     if (home == NULL) {
