@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <dirent.h>
 
 #define VERSION "v0.1.1"
 
@@ -28,16 +29,45 @@ int main(int argc, char *argv[]) {
         printf("Usage: doin <command> [args...]\n\n");
         printf("Options:\n");
         printf("  -v, --version    Show version information\n");
-        printf("  -h, --help       Show this help message\n\n");
+        printf("  -h, --help       Show this help message\n");
+        printf("  -l, --list       List all available commands\n\n");
         printf("Commands are scripts located in ~/.doin/availsh/<command>.sh\n");
         return 0;
     }
 
-    // Get the HOME directory for script lookup
+    // Get the HOME directory
     const char *home = getenv("HOME");
     if (home == NULL) {
         fprintf(stderr, "Error: HOME environment variable not set.\n");
         return 1;
+    }
+
+    // Handle list flags
+    if (strcmp(argv[1], "-l") == 0 || strcmp(argv[1], "--list") == 0) {
+        char dir_path[1024];
+        snprintf(dir_path, sizeof(dir_path), "%s/.doin/availsh", home);
+
+        DIR *d = opendir(dir_path);
+        if (d == NULL) {
+            perror("opendir");
+            return 1;
+        }
+
+        printf("Available commands:\n");
+        struct dirent *dir;
+        while ((dir = readdir(d)) != NULL) {
+            // Only list files ending in .sh
+            size_t len = strlen(dir->d_name);
+            if (len > 3 && strcmp(dir->d_name + len - 3, ".sh") == 0) {
+                // Print filename without .sh extension
+                char cmd_name[256];
+                strncpy(cmd_name, dir->d_name, len - 3);
+                cmd_name[len - 3] = '\0';
+                printf("  - %s\n", cmd_name);
+            }
+        }
+        closedir(d);
+        return 0;
     }
 
     // Construct the path to the script: ~/.doin/availsh/<command>.sh
