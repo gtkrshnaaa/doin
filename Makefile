@@ -54,7 +54,9 @@ install: all
 	
 	@echo "--------------------------------------------------"
 	@echo "$(GREEN)Installation of doin $(VERSION) completed successfully.$(RESET)"
-	@echo "You can now use '$(CYAN)doin <command>$(RESET)' to run your scripts."
+	@echo "Commands are mapped to $(CYAN)$(DOIN_SCRIPTS_PATH)/<cmd>.sh$(RESET)"
+	@echo "You can freely add, modify, or remove scripts in that directory."
+	@echo "Try '$(CYAN)doin -l$(RESET)' to see all commands or '$(CYAN)doin -h$(RESET)' for help."
 
 uninstall:
 	@echo "$(RED)[ UNINSTALL ]$(RESET) Removing binary, scripts, and completion..."

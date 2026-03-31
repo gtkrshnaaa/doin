@@ -27,11 +27,16 @@ int main(int argc, char *argv[]) {
     // Handle help flags
     if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
         printf("Usage: doin <command> [args...]\n\n");
+        printf("Description:\n");
+        printf("  doin is a minimalist wrapper for custom shell scripts. It allows you to\n");
+        printf("  execute any .sh file in ~/.doin/availsh/ without the .sh extension.\n\n");
         printf("Options:\n");
         printf("  -v, --version    Show version information\n");
         printf("  -h, --help       Show this help message\n");
-        printf("  -l, --list       List all available commands\n\n");
-        printf("Commands are scripts located in ~/.doin/availsh/<command>.sh\n");
+        printf("  -l, --list       List all available custom commands\n\n");
+        printf("Extensibility:\n");
+        printf("  You can add or modify your own scripts in ~/.doin/availsh/.\n");
+        printf("  Any executable script added there instantly becomes a doin command.\n");
         return 0;
     }
 
